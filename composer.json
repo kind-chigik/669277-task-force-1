@@ -1,0 +1,19 @@
+{
+    "name": "user/669277-task-force-1",
+    "description": "Online platform for search of performers",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "kind-chigik",
+            "email": "rus.work89@yandex.ru"
+        }
+    ],
+    "require": {},
+
+    "autoload": {
+        "psr-4": {
+            "TaskForce\\": "src/"
+        }
+    }
+}
