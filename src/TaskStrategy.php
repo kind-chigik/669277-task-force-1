@@ -2,7 +2,7 @@
 
 namespace TaskForce;
 
-class Task {
+class TaskStrategy {
     const ROLE = [
         'customer' => 'Заказчик',
         'executor' => 'Исполнитель',
@@ -49,7 +49,7 @@ class Task {
         return $statusList;
     }
 
-    public function getStatus($action)
+    public function getNextStatus($action)
     {
         if ($action === self::ACTION['cancel']) {
             return self::STATUS['cancellation'];
