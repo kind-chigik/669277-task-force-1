@@ -3,43 +3,23 @@ CREATE DATABASE taskforce
   DEFAULT COLLATE  utf8_general_ci;
 USE taskforce;
 
-CREATE TABLE city (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE cities (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(64) NOT NULL,
-  coordinates INT NOT NULL
+  latitude INT NOT NULL,
+  longitude INT NOT NULL
 );
 
-CREATE TABLE category (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE categories (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(128) NOT NULL UNIQUE
 );
 
-CREATE TABLE role (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(64) NOT NULL UNIQUE,
-  creation_time DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE status_user (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(64) NOT NULL UNIQUE
-);
-
-CREATE TABLE status_task (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(64) NOT NULL UNIQUE
-);
-
-CREATE TABLE portfolio (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  image VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE user (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE users (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(64) NOT NULL,
   password VARCHAR(64) NOT NULL,
-  avatar VARCHAR(128),
+  avatar_path VARCHAR(128),
   birthday DATETIME,
   description TEXT NOT NULL,
   phone VARCHAR(64),
@@ -49,80 +29,79 @@ CREATE TABLE user (
   registration_date DATETIME DEFAULT CURRENT_TIMESTAMP,
   last_visit DATETIME,
   rank INT DEFAULT '0',
-  city_id INT NOT NULL,
-  role_id INT NOT NULL,
-  status_id INT NOT NULL,
-  photo_work_id INT,
-  FOREIGN KEY (city_id) REFERENCES city (id),
-  FOREIGN KEY (role_id) REFERENCES role (id),
-  FOREIGN KEY (status_id) REFERENCES status_user (id),
-  FOREIGN KEY (photo_work_id) REFERENCES portfolio (id)
+  city_id INT UNSIGNED NOT NULL,
+  FOREIGN KEY (city_id) REFERENCES cities (id)
 );
 
-CREATE TABLE attachment (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE photos_work (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  image_path VARCHAR(255) NOT NULL,
+  user_id INT UNSIGNED NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
+
+CREATE TABLE tasks (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(128) NOT NULL,
+  description TEXT NOT NULL,
+  price INT,
+  creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  category_id INT UNSIGNED NOT NULL,
+  city_id INT UNSIGNED UNSIGNED,
+  creator_id INT UNSIGNED,
+  executor_id INT UNSIGNED,
+  FOREIGN KEY (category_id) REFERENCES categories (id),
+  FOREIGN KEY (city_id) REFERENCES cities (id),
+  FOREIGN KEY (creator_id) REFERENCES users (id) ON DELETE SET NULL,
+  FOREIGN KEY (executor_id) REFERENCES users (id) ON DELETE SET NULL
+);
+
+CREATE TABLE attachments (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   url_file VARCHAR(128) NOT NULL,
-  user_id INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES user (id)
+  user_id INT UNSIGNED,
+  task_id INT UNSIGNED NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL,
+  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE
 );
 
-CREATE TABLE reply (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE replies (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   reply_text TEXT NOT NULL,
   creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-  user_id INT NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES user (id)
+  user_id INT UNSIGNED,
+  task_id INT UNSIGNED NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL,
+  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE
 );
 
-CREATE TABLE task (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(128) NOT NULL,
-  discription TEXT NOT NULL,
-  price INT NOT NULL,
-  creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-  category_id INT NOT NULL,
-  city_id INT NOT NULL,
-  creator_id INT NOT NULL,
-  executor_id INT NOT NULL,
-  status_id INT NOT NULL,
-  attachment_id INT NOT NULL,
-  reply_id INT NOT NULL,
-  FOREIGN KEY (category_id) REFERENCES category (id),
-  FOREIGN KEY (city_id) REFERENCES city (id),
-  FOREIGN KEY (creator_id) REFERENCES user (id),
-  FOREIGN KEY (executor_id) REFERENCES user (id),
-  FOREIGN KEY (status_id) REFERENCES status_task (id),
-  FOREIGN KEY (attachment_id) REFERENCES attachment (id),
-  FOREIGN KEY (reply_id) REFERENCES reply (id)
-);
-
-CREATE TABLE specialization (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE specializations (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(128) NOT NULL UNIQUE,
-  category_id INT NOT NULL,
-  user_id INT,
-  FOREIGN KEY (category_id) REFERENCES category (id),
-  FOREIGN KEY (user_id) REFERENCES user (id)
+  category_id INT UNSIGNED NOT NULL,
+  user_id INT UNSIGNED,
+  FOREIGN KEY (category_id) REFERENCES categories (id),
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL
 );
 
-CREATE TABLE review (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE reviews (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   review_text TEXT,
-  evaluation INT NOT NULL,
-  task_id INT,
-  user_id INT NOT NULL,
-  FOREIGN KEY (task_id) REFERENCES task (id),
-  FOREIGN KEY (user_id) REFERENCES user (id)
+  evaluation INT DEFAULT '0',
+  task_id INT UNSIGNED,
+  user_id INT UNSIGNED,
+  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE SET NULL,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL
 );
 
-CREATE TABLE message (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE messages (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   message_text TEXT,
   creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-  user_id INT NOT NULL,
-  task_id INT,
-  FOREIGN KEY (user_id) REFERENCES user (id),
-  FOREIGN KEY (task_id) REFERENCES task (id)
+  user_id INT UNSIGNED,
+  task_id INT UNSIGNED,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL,
+  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE SET NULL
 );
 
 
