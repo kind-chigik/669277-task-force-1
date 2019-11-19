@@ -46,8 +46,9 @@ CREATE TABLE tasks (
   description TEXT NOT NULL,
   price INT,
   creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  status ENUM('Новое', 'Отменено', 'В работе', 'Выполнено', 'Провалено'),
   category_id INT UNSIGNED NOT NULL,
-  city_id INT UNSIGNED UNSIGNED,
+  city_id INT UNSIGNED,
   creator_id INT UNSIGNED,
   executor_id INT UNSIGNED,
   FOREIGN KEY (category_id) REFERENCES categories (id),
@@ -79,9 +80,15 @@ CREATE TABLE specializations (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(128) NOT NULL UNIQUE,
   category_id INT UNSIGNED NOT NULL,
+  FOREIGN KEY (category_id) REFERENCES categories (id)
+);
+
+CREATE TABLE user_specializations (
   user_id INT UNSIGNED,
-  FOREIGN KEY (category_id) REFERENCES categories (id),
-  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL
+  specialization_id INT UNSIGNED,
+  PRIMARY KEY (user_id, specialization_id),
+  FOREIGN KEY (user_id) REFERENCES users (id),
+  FOREIGN KEY (specialization_id) REFERENCES specializations (id)
 );
 
 CREATE TABLE reviews (
