@@ -46,7 +46,7 @@ CREATE TABLE tasks (
   description TEXT NOT NULL,
   price INT,
   creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-  status ENUM('Новое', 'Отменено', 'В работе', 'Выполнено', 'Провалено'),
+  status ENUM('new', 'cancellation', 'in_work', 'completed', 'failed'),
   category_id INT UNSIGNED NOT NULL,
   city_id INT UNSIGNED,
   creator_id INT UNSIGNED,
@@ -72,7 +72,7 @@ CREATE TABLE replies (
   creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
   user_id INT UNSIGNED,
   task_id INT UNSIGNED NOT NULL,
-  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
   FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE
 );
 
@@ -108,7 +108,7 @@ CREATE TABLE messages (
   user_id INT UNSIGNED,
   task_id INT UNSIGNED,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL,
-  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE SET NULL
+  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE
 );
 
 
