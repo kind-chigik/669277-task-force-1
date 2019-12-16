@@ -14,9 +14,9 @@ class RefuseAction extends AbstractActions
     {
         return 'refuse';
     }
-    public static function checkRightUser($idExecutor, $idCurrentUser, $status)
+    public static function checkRightUser(TaskStrategy $obj, $status)
     {
-        if (($TaskStrategy->idCurrentUser === $TaskStrategy->idExecutor) && ($status === TaskStrategy::STATUS['in_work'])) {
+        if (($obj->idCurrentUser === $obj->idExecutor) && ($status === TaskStrategy::STATUS['in_work'])) {
             $result = true;
         } else {
             $result = false;

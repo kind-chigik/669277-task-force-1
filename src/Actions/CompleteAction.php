@@ -15,9 +15,9 @@ class CompleteAction extends AbstractActions
         return 'complete';
     }
 
-    public static function checkRightUser($idCustomer, $idCurrentUser, $status)
+    public static function checkRightUser(TaskStrategy $obj, $status)
     {
-        if (($TaskStrategy->idCurrentUser === $TaskStrategy->idCustomer) && ($status === TaskStrategy::STATUS['in_work'])) {
+        if (($obj->idCurrentUser === $obj->idCustomer) && ($status === TaskStrategy::STATUS['in_work'])) {
             $result = true;
         } else {
             $result = false;

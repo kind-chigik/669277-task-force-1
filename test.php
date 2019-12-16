@@ -5,7 +5,7 @@ use TaskForce\TaskStrategy;
 $idUser = [
     'idCustomer' => '128.0.0.6',
     'idExecutor' => '128.0.0.7',
-    'idCurrentUser' => '128.0.0.7'
+    'idCurrentUser' => '128.0.0.6'
 ];
 $timeEnd = '21.12.2019';
 $statusActive = 'Новое';
@@ -46,7 +46,7 @@ if ($status !== TaskStrategy::STATUS['failed']) {
 
 $statusNew = TaskStrategy::STATUS['new'];                    //Если статус "Новое"
 if ($idUser['idCurrentUser'] === $idUser['idExecutor']) {    //Пользователь = Исполнитель
-    $objAction = $task->getAvailableActions($statusNew);
+    $objAction = $task->getAvailableActions($task, $statusNew);
     var_dump($objAction);
     $nameAction = get_class($objAction[$statusNew]);
     if ($nameAction === TaskStrategy::ACTION['respond']) {   //Ему должно быть доступно только действие "Откликнуться"
@@ -57,7 +57,7 @@ if ($idUser['idCurrentUser'] === $idUser['idExecutor']) {    //Пользова�
 }
 
 if ($idUser['idCurrentUser'] === $idUser['idCustomer']) {    //Пользователь = Заказчик
-    $objAction = $task->getAvailableActions($statusNew);
+    $objAction = $task->getAvailableActions($task, $statusNew);
     var_dump($objAction);
     $nameAction = get_class($objAction[$statusNew]);
     if ($nameAction === TaskStrategy::ACTION['cancel'])      {//Ему должно быть доступно действие "Отменить"
@@ -69,7 +69,7 @@ if ($idUser['idCurrentUser'] === $idUser['idCustomer']) {    //Пользова�
 
 $statusInWork = TaskStrategy::STATUS['in_work'];
 if ($idUser['idCurrentUser'] === $idUser['idExecutor']) {
-    $objAction = $task->getAvailableActions($statusInWork);
+    $objAction = $task->getAvailableActions($task, $statusInWork);
     var_dump($objAction);
     $nameAction = get_class($objAction[$statusInWork]);
     if ($nameAction === TaskStrategy::ACTION['refuse']) {
@@ -80,7 +80,7 @@ if ($idUser['idCurrentUser'] === $idUser['idExecutor']) {
 }
 
 if ($idUser['idCurrentUser'] === $idUser['idCustomer']) {
-    $objAction = $task->getAvailableActions($statusInWork);
+    $objAction = $task->getAvailableActions($task, $statusInWork);
     var_dump($objAction);
     $nameAction = get_class($objAction[$statusInWork]);
     if ($nameAction === TaskStrategy::ACTION['complete']) {
