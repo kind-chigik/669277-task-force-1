@@ -6,6 +6,7 @@ use TaskForce\Actions\CancelAction;
 use TaskForce\Actions\CompleteAction;
 use TaskForce\Actions\RefuseAction;
 use TaskForce\Actions\RespondAction;
+use TaskForce\Actions\AcceptAction;
 
 class TaskStrategy {
     const ROLE = [
@@ -17,7 +18,8 @@ class TaskStrategy {
         'cancel' => CancelAction::class,
         'complete' => CompleteAction::class,
         'refuse' => RefuseAction::class,
-        'respond' => RespondAction::class
+        'respond' => RespondAction::class,
+        'accept' => AcceptAction::class,
     ];
     const STATUS = [
         'new' => 'Новое',
@@ -27,19 +29,17 @@ class TaskStrategy {
         'failed' => 'Провалено'
     ];
 
-    public $idCustomer;
-    public $idExecutor;
-    public $idCurrentUser;
-    public $timeEnd;
-    public $statusActive;
+    private $idCustomer;
+    private $idExecutor;
+    private $timeEnd;
+    private $currentStatus;
  
-    public function __construct($idUser, $timeEnd, $statusActive)
+    public function __construct($idCustomer, $idExecutor, $timeEnd, $currentStatus)
     {
-        $this->idCustomer = $idUser['idCustomer'];
-        $this->idExecutor = $idUser['idExecutor'];
-        $this->idCurrentUser = $idUser['idCurrentUser'];
+        $this->idCustomer = $idCustomer;
+        $this->idExecutor = $idExecutor;
         $this->timeEnd = $timeEnd;
-        $this->statusActive = $statusActive;
+        $this->currentStatus = $currentStatus;
     }
 
     public function getActionList()
@@ -74,37 +74,49 @@ class TaskStrategy {
         return null;
     }
 
-    public function getAvailableActions(TaskStrategy $obj, $status)
+    public function getAvailableActions($idCurrentUser)
     {
+        $idCustomer = $this->idCustomer;
+        $idExecutor = $this->idExecutor;
+        $currentStatus = $this->currentStatus;
         $availableActions = [];
-        if ($status === TaskStrategy::STATUS['new']) {
-            $checkRightsCancel = CancelAction::checkRightUser($obj, $status);
+
+        if ($currentStatus === TaskStrategy::STATUS['new'])
+        {
+            $checkRightsCancel = CancelAction::checkRightUser($idCustomer, $idCurrentUser, $currentStatus);
             if ($checkRightsCancel === true)
             {
-                $availableActions[$status] = new CancelAction;
+                $availableActions[] = new CancelAction;
             }
 
-            $checkRightsRespond = RespondAction::checkRightUser($obj, $status);
+            $checkRightsAccept = AcceptAction::checkRightUser($idCustomer, $idCurrentUser, $currentStatus);
+            if ($checkRightsAccept === true)
+            {
+                $availableActions[] = new AcceptAction;
+            }
+
+            $checkRightsRespond = RespondAction::checkRightUser($idExecutor, $idCurrentUser, $currentStatus);
             if ($checkRightsRespond === true)
             {
-                $availableActions[$status] = new RespondAction;
+                $availableActions[] = new RespondAction;
             }
         }
 
-        if ($status === TaskStrategy::STATUS['in_work']) {
-            $checkRightsComplete = CompleteAction::checkRightUser($obj, $status);
+        if ($currentStatus === TaskStrategy::STATUS['in_work'])
+        {
+            $checkRightsComplete = CompleteAction::checkRightUser($idCustomer, $idCurrentUser, $currentStatus);
             if ($checkRightsComplete === true)
             {
-                $availableActions[$status] = new CompleteAction;
+                $availableActions[] = new CompleteAction;
             }
-
-            $checkRightsRefuse = RefuseAction::checkRightUser($obj, $status);
+            
+            $checkRightsRefuse = RefuseAction::checkRightUser($idExecutor, $idCurrentUser, $currentStatus);
             if ($checkRightsRefuse === true)
             {
-                $availableActions[$status] = new RefuseAction;
+                $availableActions[] = new RefuseAction;
             }
         }
+        
         return $availableActions;
     }
 }
-
