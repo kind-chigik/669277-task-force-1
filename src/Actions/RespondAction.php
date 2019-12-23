@@ -15,9 +15,9 @@ class RespondAction extends AbstractActions
         return 'respond';
     }
 
-    public static function checkRightUser(TaskStrategy $obj, $status)
+    public static function checkRightUser($idExecutor, $idCurrentUser, $currentStatus)
     {
-        if (($obj->idCurrentUser === $obj->idExecutor) && ($status === TaskStrategy::STATUS['new'])) {
+        if (($idCurrentUser === $idExecutor) && ($currentStatus === TaskStrategy::STATUS['new'])) {
             $result = true;
         } else {
             $result = false;

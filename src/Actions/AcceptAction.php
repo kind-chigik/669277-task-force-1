@@ -3,21 +3,21 @@ namespace TaskForce\Actions;
 
 use TaskForce\TaskStrategy;
 
-class CompleteAction extends AbstractActions 
+class AcceptAction extends AbstractActions 
 {
     public function getNameAction()
     {
-        return 'Завершить';
+        return 'Принять';
     }
 
     public function getInsideName() 
     {
-        return 'complete';
+        return 'accept';
     }
 
     public static function checkRightUser($idCustomer, $idCurrentUser, $currentStatus)
     {
-        if (($idCurrentUser === $idCustomer) && ($currentStatus === TaskStrategy::STATUS['in_work'])) {
+        if (($idCurrentUser === $idCustomer) && ($currentStatus === TaskStrategy::STATUS['new'])) {
             $result = true;
         } else {
             $result = false;
@@ -25,4 +25,3 @@ class CompleteAction extends AbstractActions
         return $result;
     }
 }
-

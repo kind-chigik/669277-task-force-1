@@ -15,9 +15,9 @@ class CancelAction extends AbstractActions
         return 'cancel';
     }
 
-    public static function checkRightUser(TaskStrategy $obj, $status)
+    public static function checkRightUser($idCustomer, $idCurrentUser, $currentStatus)
     {
-        if (($obj->idCurrentUser === $obj->idCustomer) && ($status === TaskStrategy::STATUS['new'])) {
+        if (($idCurrentUser === $idCustomer) && ($currentStatus === TaskStrategy::STATUS['new'])) {
             $result = true;
         } else {
             $result = false;
