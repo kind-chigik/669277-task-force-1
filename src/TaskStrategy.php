@@ -79,44 +79,17 @@ class TaskStrategy {
         $idCustomer = $this->idCustomer;
         $idExecutor = $this->idExecutor;
         $currentStatus = $this->currentStatus;
+        $actions = self::ACTION;
         $availableActions = [];
 
-        if ($currentStatus === TaskStrategy::STATUS['new'])
-        {
-            $checkRightsCancel = CancelAction::checkRightUser($idCustomer, $idCurrentUser, $currentStatus);
-            if ($checkRightsCancel === true)
+        foreach ($actions as $action) {
+            $checkRights = $action::checkRightUser($idCustomer, $idExecutor, $idCurrentUser, $currentStatus);
+            if ($checkRights === true)
             {
-                $availableActions[] = new CancelAction;
-            }
-
-            $checkRightsAccept = AcceptAction::checkRightUser($idCustomer, $idCurrentUser, $currentStatus);
-            if ($checkRightsAccept === true)
-            {
-                $availableActions[] = new AcceptAction;
-            }
-
-            $checkRightsRespond = RespondAction::checkRightUser($idExecutor, $idCurrentUser, $currentStatus);
-            if ($checkRightsRespond === true)
-            {
-                $availableActions[] = new RespondAction;
+                $availableActions[] = new $action;
             }
         }
-
-        if ($currentStatus === TaskStrategy::STATUS['in_work'])
-        {
-            $checkRightsComplete = CompleteAction::checkRightUser($idCustomer, $idCurrentUser, $currentStatus);
-            if ($checkRightsComplete === true)
-            {
-                $availableActions[] = new CompleteAction;
-            }
-            
-            $checkRightsRefuse = RefuseAction::checkRightUser($idExecutor, $idCurrentUser, $currentStatus);
-            if ($checkRightsRefuse === true)
-            {
-                $availableActions[] = new RefuseAction;
-            }
-        }
-        
-        return $availableActions;
+                    
+        return $availableActions; 
     }
 }
