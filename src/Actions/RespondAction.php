@@ -10,12 +10,12 @@ class RespondAction extends AbstractActions
         return 'Откликнуться';
     }
 
-    public function getInsideName() 
+    public static function getInsideName() 
     {
         return 'respond';
     }
 
-    public static function checkRightUser($idExecutor, $idCurrentUser, $currentStatus)
+    public static function checkRightUser($idCustomer, $idExecutor, $idCurrentUser, $currentStatus)
     {
         if (($idCurrentUser === $idExecutor) && ($currentStatus === TaskStrategy::STATUS['new'])) {
             $result = true;

@@ -10,12 +10,12 @@ class AcceptAction extends AbstractActions
         return 'Принять';
     }
 
-    public function getInsideName() 
+    public static function getInsideName() 
     {
         return 'accept';
     }
 
-    public static function checkRightUser($idCustomer, $idCurrentUser, $currentStatus)
+    public static function checkRightUser($idCustomer, $idExecutor, $idCurrentUser, $currentStatus)
     {
         if (($idCurrentUser === $idCustomer) && ($currentStatus === TaskStrategy::STATUS['new'])) {
             $result = true;

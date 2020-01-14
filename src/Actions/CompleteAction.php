@@ -10,12 +10,12 @@ class CompleteAction extends AbstractActions
         return 'Завершить';
     }
 
-    public function getInsideName() 
+    public static function getInsideName() 
     {
         return 'complete';
     }
 
-    public static function checkRightUser($idCustomer, $idCurrentUser, $currentStatus)
+    public static function checkRightUser($idCustomer, $idExecutor, $idCurrentUser, $currentStatus)
     {
         if (($idCurrentUser === $idCustomer) && ($currentStatus === TaskStrategy::STATUS['in_work'])) {
             $result = true;

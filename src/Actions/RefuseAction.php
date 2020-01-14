@@ -10,11 +10,11 @@ class RefuseAction extends AbstractActions
         return 'Отказаться';
     }
 
-    public function getInsideName() 
+    public static function getInsideName() 
     {
         return 'refuse';
     }
-    public static function checkRightUser($idExecutor, $idCurrentUser, $currentStatus)
+    public static function checkRightUser($idCustomer, $idExecutor, $idCurrentUser, $currentStatus)
     {
         if (($idCurrentUser === $idExecutor) && ($currentStatus === TaskStrategy::STATUS['in_work'])) {
             $result = true;

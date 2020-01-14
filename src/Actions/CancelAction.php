@@ -10,12 +10,12 @@ class CancelAction extends AbstractActions
         return 'Отменить';
     }
 
-    public function getInsideName() 
+    public static function getInsideName() 
     {
         return 'cancel';
     }
 
-    public static function checkRightUser($idCustomer, $idCurrentUser, $currentStatus)
+    public static function checkRightUser($idCustomer, $idExecutor, $idCurrentUser, $currentStatus)
     {
         if (($idCurrentUser === $idCustomer) && ($currentStatus === TaskStrategy::STATUS['new'])) {
             $result = true;
