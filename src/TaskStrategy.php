@@ -2,6 +2,12 @@
 
 namespace TaskForce;
 
+use TaskForce\Actions\CancelAction;
+use TaskForce\Actions\CompleteAction;
+use TaskForce\Actions\RefuseAction;
+use TaskForce\Actions\RespondAction;
+use TaskForce\Actions\AcceptAction;
+
 class TaskStrategy {
     const ROLE = [
         'customer' => 'Заказчик',
@@ -9,32 +15,31 @@ class TaskStrategy {
         'unknown' => 'Анонимный'
     ];
     const ACTION = [
-        'publish' => 'Опубликовать',
-        'cancel' => 'Отменить',
-        'accept' => 'Принять',
-        'complete' => 'Завершить',
-        'refuse' => 'Отказаться',
-        'respond' => 'Откликнуться'
+        'cancel' => CancelAction::class,
+        'complete' => CompleteAction::class,
+        'refuse' => RefuseAction::class,
+        'respond' => RespondAction::class,
+        'accept' => AcceptAction::class,
     ];
     const STATUS = [
         'new' => 'Новое',
-        'cancellation' => 'Отменено',
+        'cancelled' => 'Отменено',
         'in_work' => 'В работе',
         'completed' => 'Выполнено',
         'failed' => 'Провалено'
     ];
 
-    public $idCustomer;
-    public $idExecutor;
-    public $timeEnd;
-    public $statusActive;
-
-    public function __construct($idCustomer, $idExecutor, $timeEnd, $statusActive)
+    private $idCustomer;
+    private $idExecutor;
+    private $timeEnd;
+    private $currentStatus;
+ 
+    public function __construct($idCustomer, $idExecutor, $timeEnd, $currentStatus)
     {
         $this->idCustomer = $idCustomer;
         $this->idExecutor = $idExecutor;
         $this->timeEnd = $timeEnd;
-        $this->statusActive = $statusActive;
+        $this->currentStatus = $currentStatus;
     }
 
     public function getActionList()
@@ -52,7 +57,7 @@ class TaskStrategy {
     public function getNextStatus($action)
     {
         if ($action === self::ACTION['cancel']) {
-            return self::STATUS['cancellation'];
+            return self::STATUS['cancelled'];
         }
 
         if ($action === self::ACTION['accept']) {
@@ -67,5 +72,24 @@ class TaskStrategy {
             return self::STATUS['failed'];
         }
         return null;
+    }
+
+    public function getAvailableActions($idCurrentUser)
+    {
+        $idCustomer = $this->idCustomer;
+        $idExecutor = $this->idExecutor;
+        $currentStatus = $this->currentStatus;
+        $actions = self::ACTION;
+        $availableActions = [];
+
+        foreach ($actions as $action) {
+            $checkRights = $action::checkRightUser($idCustomer, $idExecutor, $idCurrentUser, $currentStatus);
+            if ($checkRights === true)
+            {
+                $availableActions[] = new $action;
+            }
+        }
+                    
+        return $availableActions; 
     }
 }
