@@ -3,7 +3,7 @@ namespace TaskForce\Actions;
 
 abstract class AbstractActions 
 {
-    abstract public function getNameAction();
-    abstract public static function getInsideName();
-    abstract public static function checkRightUser($idCustomer, $idExecutor, $idCurrentUser, $status);
+    abstract public function getNameAction() : string;
+    abstract public static function getInsideName() : string;
+    abstract public static function checkRightUser(int $idCustomer, int $idExecutor, int $idCurrentUser, string $status) : bool;
 }

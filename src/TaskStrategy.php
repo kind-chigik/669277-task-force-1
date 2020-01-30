@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace TaskForce;
 
@@ -7,6 +8,8 @@ use TaskForce\Actions\CompleteAction;
 use TaskForce\Actions\RefuseAction;
 use TaskForce\Actions\RespondAction;
 use TaskForce\Actions\AcceptAction;
+use TaskForce\Exceptions\FakeStatusException;
+use TaskForce\Exceptions\FakeActionException;
 
 class TaskStrategy {
     const ROLE = [
@@ -34,28 +37,38 @@ class TaskStrategy {
     private $timeEnd;
     private $currentStatus;
  
-    public function __construct($idCustomer, $idExecutor, $timeEnd, $currentStatus)
+    public function __construct(int $idCustomer, int $idExecutor, string $timeEnd, string $currentStatus)
     {
         $this->idCustomer = $idCustomer;
         $this->idExecutor = $idExecutor;
         $this->timeEnd = $timeEnd;
+        if (!in_array($currentStatus, self::STATUS)) 
+        {
+            throw new FakeStatusException('Передан несуществующий статус');
+        }
         $this->currentStatus = $currentStatus;
+
     }
 
-    public function getActionList()
+    public function getActionList(): array
     {
         $actionList = self::ACTION;
         return $actionList;
     }
 
-    public function getStatusList()
+    public function getStatusList(): array
     {
         $statusList = self::STATUS;
         return $statusList;
     }
 
-    public function getNextStatus($action)
+    public function getNextStatus(string $action) : ?string
     {
+        if (!in_array($action, self::ACTION))
+        {
+            throw new FakeActionException('Передано несуществующее действие');
+        }
+
         if ($action === self::ACTION['cancel']) {
             return self::STATUS['cancelled'];
         }
@@ -74,7 +87,7 @@ class TaskStrategy {
         return null;
     }
 
-    public function getAvailableActions($idCurrentUser)
+    public function getAvailableActions(int $idCurrentUser) : array
     {
         $idCustomer = $this->idCustomer;
         $idExecutor = $this->idExecutor;

@@ -5,17 +5,17 @@ use TaskForce\TaskStrategy;
 
 class AcceptAction extends AbstractActions 
 {
-    public function getNameAction()
+    public function getNameAction() : string
     {
         return 'Принять';
     }
 
-    public static function getInsideName() 
+    public static function getInsideName() : string 
     {
         return 'accept';
     }
 
-    public static function checkRightUser($idCustomer, $idExecutor, $idCurrentUser, $currentStatus)
+    public static function checkRightUser(int $idCustomer, int $idExecutor, int $idCurrentUser, string $currentStatus) : bool
     {
         if (($idCurrentUser === $idCustomer) && ($currentStatus === TaskStrategy::STATUS['new'])) {
             $result = true;

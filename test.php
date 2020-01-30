@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
+
 require_once('vendor/autoload.php');
 use TaskForce\TaskStrategy;
 use TaskForce\Actions\CancelAction;
@@ -6,6 +11,8 @@ use TaskForce\Actions\CompleteAction;
 use TaskForce\Actions\RefuseAction;
 use TaskForce\Actions\RespondAction;
 use TaskForce\Actions\AcceptAction;
+use TaskForce\Exceptions\FakeStatusException;
+use TaskForce\Exceptions\FakeActionException;
 
 $idCustomer = 128;
 $idExecutor = 127;
@@ -103,6 +110,20 @@ $taskStrategy = new TaskStrategy($idCustomer, $idExecutor, $timeEnd, $caseInWork
 $currentActions = $taskStrategy->getAvailableActions($caseInWorkCustomer['idCurrentUser']);
 $testResult = areArraysEqual($currentActions, $caseInWorkCustomer['expected']);
 
+try {
+    $task = new TaskStrategy ($idCustomer, $idExecutor, $timeEnd, $currentStatus);
+}
+catch (FakeStatusException $s) {
+    print 'Ошибка: ' . $s->getMessage();
+}
+
+try {
+    $task->getNextStatus($action);
+}
+catch (FakeActionException $a) {
+    print 'Ошибка: ' . $a->getMessage();
+}
+
 /**
  * Проверяет наличие значений одного массива в другом массиве
  * 
@@ -111,7 +132,8 @@ $testResult = areArraysEqual($currentActions, $caseInWorkCustomer['expected']);
  * 
  * @return string Сообщение о результате проверки
  */
-function areArraysEqual($array1, $array2 = array('expected')) {
+function areArraysEqual(array $array1, array $array2 = array('expected')) : void
+{
     $nameObject = [];
     foreach ($array1 as $key) {
         $nameObject[] = $key::getInsideName();
