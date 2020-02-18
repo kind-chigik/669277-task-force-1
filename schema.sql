@@ -5,14 +5,15 @@ USE taskforce;
 
 CREATE TABLE cities (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(64) NOT NULL,
+  city VARCHAR(64) NOT NULL,
   latitude INT NOT NULL,
   longitude INT NOT NULL
 );
 
 CREATE TABLE categories (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(128) NOT NULL UNIQUE
+  name VARCHAR(128) NOT NULL UNIQUE,
+  icon VARCHAR(128) NOT NULL UNIQUE
 );
 
 CREATE TABLE users (
@@ -20,16 +21,17 @@ CREATE TABLE users (
   name VARCHAR(64) NOT NULL,
   password VARCHAR(64) NOT NULL,
   avatar_path VARCHAR(128),
-  birthday DATETIME,
-  description TEXT NOT NULL,
+  bd DATETIME,
+  about TEXT,
   phone VARCHAR(64),
   email VARCHAR(64) NOT NULL UNIQUE,
   skype VARCHAR(64),
   another_contact VARCHAR(64),
-  registration_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  dt_add DATETIME DEFAULT CURRENT_TIMESTAMP,
   last_visit DATETIME,
   rank INT DEFAULT '0',
-  city_id INT UNSIGNED NOT NULL,
+  address VARCHAR(128),
+  city_id INT UNSIGNED,
   FOREIGN KEY (city_id) REFERENCES cities (id)
 );
 
@@ -42,15 +44,19 @@ CREATE TABLE photos_work (
 
 CREATE TABLE tasks (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(128) NOT NULL,
+  name VARCHAR(128) NOT NULL,
   description TEXT NOT NULL,
-  price INT,
-  creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-  status ENUM('new', 'cancellation', 'in_work', 'completed', 'failed'),
+  budget INT,
+  dt_add DATETIME DEFAULT CURRENT_TIMESTAMP,
+  expire DATETIME,
+  status ENUM('new', 'cancelled', 'in_work', 'completed', 'failed'),
   category_id INT UNSIGNED NOT NULL,
+  address VARCHAR(128),
   city_id INT UNSIGNED,
   creator_id INT UNSIGNED,
   executor_id INT UNSIGNED,
+  latitude INT NOT NULL,
+  longitude INT NOT NULL,
   FOREIGN KEY (category_id) REFERENCES categories (id),
   FOREIGN KEY (city_id) REFERENCES cities (id),
   FOREIGN KEY (creator_id) REFERENCES users (id) ON DELETE SET NULL,
@@ -68,10 +74,11 @@ CREATE TABLE attachments (
 
 CREATE TABLE replies (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  reply_text TEXT NOT NULL,
-  creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+  description TEXT NOT NULL,
+  dt_add DATETIME DEFAULT CURRENT_TIMESTAMP,
+  rate INT,
   user_id INT UNSIGNED,
-  task_id INT UNSIGNED NOT NULL,
+  task_id INT UNSIGNED,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
   FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE
 );
