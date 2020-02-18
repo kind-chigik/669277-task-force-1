@@ -1,0 +1,1 @@
+INSERT INTO specializations (﻿title) VALUES ("Уборка"),("Ремонт"),("Курьер"),("Оператор ПК"),("Переводчик");
