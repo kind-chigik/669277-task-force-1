@@ -86,7 +86,7 @@ CREATE TABLE replies (
 CREATE TABLE specializations (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(128) NOT NULL UNIQUE,
-  category_id INT UNSIGNED NOT NULL,
+  category_id INT UNSIGNED,
   FOREIGN KEY (category_id) REFERENCES categories (id)
 );
 
