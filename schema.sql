@@ -21,17 +21,17 @@ CREATE TABLE users (
   name VARCHAR(64) NOT NULL,
   password VARCHAR(64) NOT NULL,
   avatar_path VARCHAR(128),
-  bd DATETIME,
+  birthday DATETIME,
   about TEXT,
   phone VARCHAR(64),
   email VARCHAR(64) NOT NULL UNIQUE,
   skype VARCHAR(64),
   another_contact VARCHAR(64),
-  dt_add DATETIME DEFAULT CURRENT_TIMESTAMP,
+  registration_date DATETIME DEFAULT CURRENT_TIMESTAMP,
   last_visit DATETIME,
   rank INT DEFAULT '0',
   address VARCHAR(128),
-  city_id INT UNSIGNED,
+  city_id INT UNSIGNED NOT NULL,
   FOREIGN KEY (city_id) REFERENCES cities (id)
 );
 
@@ -47,7 +47,7 @@ CREATE TABLE tasks (
   name VARCHAR(128) NOT NULL,
   description TEXT NOT NULL,
   budget INT,
-  dt_add DATETIME DEFAULT CURRENT_TIMESTAMP,
+  creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
   expire DATETIME,
   status ENUM('new', 'cancelled', 'in_work', 'completed', 'failed'),
   category_id INT UNSIGNED NOT NULL,
@@ -75,27 +75,20 @@ CREATE TABLE attachments (
 CREATE TABLE replies (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   description TEXT NOT NULL,
-  dt_add DATETIME DEFAULT CURRENT_TIMESTAMP,
+  creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
   rate INT,
-  user_id INT UNSIGNED,
-  task_id INT UNSIGNED,
+  user_id INT UNSIGNED NOT NULL,
+  task_id INT UNSIGNED NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
   FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE
 );
 
-CREATE TABLE specializations (
-  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(128) NOT NULL UNIQUE,
-  category_id INT UNSIGNED,
-  FOREIGN KEY (category_id) REFERENCES categories (id)
-);
-
-CREATE TABLE user_specializations (
+CREATE TABLE user_categories (
   user_id INT UNSIGNED,
-  specialization_id INT UNSIGNED,
-  PRIMARY KEY (user_id, specialization_id),
+  category_id INT UNSIGNED,
+  PRIMARY KEY (user_id, category_id),
   FOREIGN KEY (user_id) REFERENCES users (id),
-  FOREIGN KEY (specialization_id) REFERENCES specializations (id)
+  FOREIGN KEY (category_id) REFERENCES categories (id)
 );
 
 CREATE TABLE reviews (
