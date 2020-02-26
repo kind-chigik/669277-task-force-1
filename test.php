@@ -114,7 +114,7 @@ try {
     $task = new TaskStrategy ($idCustomer, $idExecutor, $timeEnd, 'Старое');
 }
 catch (FakeStatusException $s) {
-    print 'Ошибка: ' . $s->getMessage() . '<br>';
+    print 'Проверка для исключения: ' . $s->getMessage() . ' - прошла успешно' . '<br>';
 }
 
 try {
@@ -122,7 +122,7 @@ try {
     $task->getNextStatus($action);
 }
 catch (FakeActionException $a) {
-    print 'Ошибка: ' . $a->getMessage();
+    print 'Проверка для исключения: ' . $a->getMessage() . ' - прошла успешно' . '<br>';
 }
 
 /**
