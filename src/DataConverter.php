@@ -2,17 +2,23 @@
 
 namespace TaskForce;
 
-class DataImporter {
+class DataConverter {
     private $file;
-    private $fileName;
+    private $tableName;
+    private $data;
+    private $titlesFields;
+    private $query;
 
-    public function __construct(string $filePath, string $fileName)
+    public function __construct(string $filePath, string $tableName)
     {
         $this->file = new \SplFileObject($filePath);
-        $this->fileName = $fileName;
+        $this->tableName = $tableName;
+        $this->titlesFields = $this->getCsvHeaders();
+        $this->data = $this->getData();
+        $this->query = $this->convertDataToSql();
     }
     
-    public function getData() : array
+    private function getData() : array
     {
         $this->file->setFlags(\SplFileObject::READ_CSV | \SplFileObject::SKIP_EMPTY | \SplFileObject::READ_AHEAD);
         foreach ($this->file as $row) {
@@ -21,20 +27,20 @@ class DataImporter {
         return $result;
     }
 
-    public function getTitlesFilds() {
+    private function getCsvHeaders() : array {
         $this->file->rewind();
         $titlesFields = $this->file->fgetcsv();
         return $titlesFields;
     }
 
-    public function convertDataToSql(array $data, array $titlesFields) : string
+    private function convertDataToSql() : string
     {
         $counter = 0;
-        $sliceData = array_slice($data, 1);
-        $query = "INSERT INTO $this->fileName (";
-        foreach ($titlesFields as $value) {
+        $sliceData = array_slice($this->data, 1);
+        $query = "INSERT INTO $this->tableName (";
+        foreach ($this->titlesFields as $value) {
             $counter = $counter + 1;
-            if ($counter !== count($titlesFields)) {
+            if ($counter !== count($this->titlesFields)) {
                 $query .= $value . ', ';
             } else {
                 $query .= $value . ')';
@@ -68,10 +74,10 @@ class DataImporter {
         return $query;
     }
 
-    public function createSqlFile(string $sqlFilePath, string $query) 
+    public function createSqlFile(string $sqlFilePath) 
     {
         $sqlFile = new \SplFileObject($sqlFilePath, 'w+');
-        $sqlFile->fwrite($query);
+        $sqlFile->fwrite($this->query);
         return;
     }
 }
