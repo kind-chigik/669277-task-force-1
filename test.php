@@ -111,26 +111,27 @@ $currentActions = $taskStrategy->getAvailableActions($caseInWorkCustomer['idCurr
 $testResult = areArraysEqual($currentActions, $caseInWorkCustomer['expected']);
 
 try {
-    $task = new TaskStrategy ($idCustomer, $idExecutor, $timeEnd, $currentStatus);
+    $task = new TaskStrategy ($idCustomer, $idExecutor, $timeEnd, 'Старое');
 }
 catch (FakeStatusException $s) {
-    print 'Ошибка: ' . $s->getMessage();
+    print 'Проверка для исключения: ' . $s->getMessage() . ' - прошла успешно' . '<br>';
 }
 
 try {
+    $action = 'Удалить';
     $task->getNextStatus($action);
 }
 catch (FakeActionException $a) {
-    print 'Ошибка: ' . $a->getMessage();
+    print 'Проверка для исключения: ' . $a->getMessage() . ' - прошла успешно' . '<br>';
 }
 
 /**
- * Проверяет наличие значений одного массива в другом массиве
+ * Проверяет наличие значений одного массива в другом массиве и выводит сообщение о результате проверки
  * 
  * @param $array1 array Массив с объектами, который должны содержаться в другом массиве
  * @param $array2 array Массив с объектами, в котором должны содержаться искомые значения
  * 
- * @return string Сообщение о результате проверки
+ * @return void
  */
 function areArraysEqual(array $array1, array $array2 = array('expected')) : void
 {
