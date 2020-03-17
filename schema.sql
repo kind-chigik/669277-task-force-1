@@ -84,8 +84,8 @@ CREATE TABLE replies (
 );
 
 CREATE TABLE user_categories (
-  user_id INT UNSIGNED,
-  category_id INT UNSIGNED,
+  user_id INT UNSIGNED NOT NULL,
+  category_id INT UNSIGNED NOT NULL,
   PRIMARY KEY (user_id, category_id),
   FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (category_id) REFERENCES categories (id)
