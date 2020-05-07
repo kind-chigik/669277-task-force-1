@@ -22,6 +22,7 @@ use Yii;
  * @property int|null $rank
  * @property string|null $address
  * @property int $city_id
+ * @property string|null $role
  *
  * @property Attachments[] $attachments
  * @property Categories[] $categories
@@ -52,7 +53,7 @@ class Users extends \yii\db\ActiveRecord
         return [
             [['name', 'password', 'email', 'city_id'], 'required'],
             [['birthday', 'registration_date', 'last_visit'], 'safe'],
-            [['about'], 'string'],
+            [['about', 'role'], 'string'],
             [['rank', 'city_id'], 'integer'],
             [['name', 'password', 'phone', 'email', 'skype', 'another_contact'], 'string', 'max' => 64],
             [['avatar_path', 'address'], 'string', 'max' => 128],
@@ -82,6 +83,7 @@ class Users extends \yii\db\ActiveRecord
             'rank' => 'Rank',
             'address' => 'Address',
             'city_id' => 'City ID',
+            'role' => 'Role',
         ];
     }
 
