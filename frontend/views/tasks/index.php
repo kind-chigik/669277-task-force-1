@@ -1,17 +1,24 @@
+<?php
+/* @var $this yii\web\View */
+/* @var $executors frontend\models\Tasks[] */
+$this->title = 'Задачи';
+?>
+
 <section class="new-task">
     <div class="new-task__wrapper">
         <h1>Новые задания</h1>
-        <?php foreach ($dataNewTasks as $data): ?>
+
+        <?php foreach ($newTasks as $task): ?>
             <div class="new-task__card">
                 <div class="new-task__title">
-                    <a href="#" class="link-regular"><h2><?= $data['name']; ?></h2></a>
-                    <a  class="new-task__type link-regular" href="#"><p><?= $data['category_name']; ?></p></a>
+                    <a href="#" class="link-regular"><h2><?= $task->name; ?></h2></a>
+                    <a  class="new-task__type link-regular" href="#"><p><?= $task->category->name; ?></p></a>
                 </div>
-                <div class="new-task__icon new-task__icon--translation"></div>
-                <p class="new-task_description"><?= $data['description']; ?></p>
-                <b class="new-task__price new-task__price--translation"><?= $data['budget']; ?><b> ₽</b></b>
-                <p class="new-task__place"><?= $data['city_name']; ?></p>
-                <span class="new-task__time"><?= $data['creation_date']; ?></span>
+                <div class="new-task__icon new-task__icon--<?= $task->category->icon; ?>"></div>
+                <p class="new-task_description"><?= $task->description; ?></p>
+                <b class="new-task__price new-task__price--translation"><?= $task->budget; ?><b> ₽</b></b>
+                <p class="new-task__place"><?= $task->city->city; ?></p>
+                <span class="new-task__time"><?= Yii::$app->formatter->asRelativeTime($task->creation_date, 'now'); ?></span>
             </div>
         <?php endforeach; ?>
     </div>
