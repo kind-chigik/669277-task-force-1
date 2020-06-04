@@ -37,6 +37,35 @@ use Yii;
  */
 class Users extends \yii\db\ActiveRecord
 {
+    private $tasksCount;
+    private $reviewsCount;
+    
+    public function getTasksCount()
+    {
+        if ($this->isNewRecord) {
+            return null;
+        }
+
+        if ($this->tasksCount === null) {
+            $this->tasksCount = $this->getTasks0()->count();
+        }
+
+        return $this->tasksCount;
+    }
+
+    public function getReviewsCount() 
+    {
+        if($this->isNewRecord) {
+            return null;
+        }
+
+        if($this->reviewsCount === null) {
+            $this->reviewsCount = $this->getReviews()->count();
+        }
+
+        return $this->reviewsCount;
+    }
+
     /**
      * {@inheritdoc}
      */
