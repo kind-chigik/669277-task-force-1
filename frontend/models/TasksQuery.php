@@ -31,4 +31,23 @@ class TasksQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
+
+    public function isNewTasks()
+    {
+        return $this->where(['status' => 'new']);
+    }
+
+    public function withCity()
+    {
+        return $this->joinWith('city');
+    }
+
+    public function withCategory()
+    {
+        return $this->joinWith('category');
+    }
+
+    public function sortByCreationDate($sort) {
+        return $this->orderBy(['creation_date' => $sort]);
+    }
 }
