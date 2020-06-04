@@ -1,3 +1,9 @@
+<?php
+/* @var $this yii\web\View */
+/* @var $executors frontend\models\Users[] */
+$this->title = 'Исполнители';
+?>
+
 <section class="user__search">
     <div class="user__search-link">
         <p>Сортировать по:</p>
@@ -13,25 +19,27 @@
             </li>
         </ul>
     </div>
-    <?php foreach ($executorsAndCategories as $executor): ?>
+    <?php foreach ($executors as $executor): ?>
         <div class="content-view__feedback-card user__search-wrapper">
             <div class="feedback-card__top">
                 <div class="user__search-icon">
-                    <a href="#"><img src="./img/man-glasses.jpg" width="65" height="65"></a>
-                    <span><?= $executor['tasksCount']; ?> заданий</span>
-                    <span><?= $executor['reviewsCount']; ?> отзывов</span>
+                    <a href="#"><img src="./img/<?= $executor->avatar_path ?? 'user-photo.png'; ?>" width="65" height="65"></a>
+                    <span><?= Yii::$app->i18n->format('{t, plural, =0{# заданий} one{# задание} few{# задания} many{# заданий} other{# заданий}}', 
+                    ['t' => $executor->tasksCount], 'ru-RU'); ?></span>
+                    <span><?= Yii::$app->i18n->format('{n, plural, =0{# отзывов} one{# отзыв} few{# отзыва} many{# отзывов} other{# отзывов}}', 
+                    ['n' => $executor->reviewsCount], 'ru-RU'); ?></span>
                 </div>
                 <div class="feedback-card__top--name user__search-card">
-                    <p class="link-name"><a href="#" class="link-regular"><?=$executor['name']; ?></a></p>
+                    <p class="link-name"><a href="#" class="link-regular"><?=$executor->name; ?></a></p>
                     <span></span><span></span><span></span><span></span><span class="star-disabled"></span>
-                    <b><?= $executor['rank']; ?></b>
-                    <p class="user__search-content"><?= $executor['about']; ?></p>
+                    <b><?= $executor->rank; ?></b>
+                    <p class="user__search-content"><?= $executor->about; ?></p>
                 </div>
-                <span class="new-task__time">Был на сайте <?= $executor['last_visit']; ?></span>
+                <span class="new-task__time">Был на сайте <?= Yii::$app->formatter->asRelativeTime($executor->last_visit, 'now'); ?></span>
             </div>
             <div class="link-specialization user__search-link--bottom">
-            <?php foreach ($executor['categories_names'] as $category_name): ?>
-                <a href="#" class="link-regular"><?= $category_name; ?></a>
+            <?php foreach ($executor->categories as $category): ?>
+                <a href="#" class="link-regular"><?= $category->name; ?></a>
             <?php endforeach; ?>
             </div>
         </div>
