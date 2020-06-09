@@ -7,10 +7,9 @@ require_once('vendor/autoload.php');
 use TaskForce\DataConverter;
 
 $files = [
-    'categories' => __DIR__."/data/categories.csv", 
-    'cities' => __DIR__."/data/cities.csv", 
+    'categories' => __DIR__."/data/categories.csv",
+    'cities' => __DIR__."/data/cities.csv",
     'tasks' => __DIR__."/data/tasks.csv",
-    'replies' => __DIR__."/data/replies.csv",
     'users' => __DIR__."/data/users.csv",
     'user_categories' => __DIR__."/data/user_categories.csv",
     'reviews' => __DIR__."/data/reviews.csv"
