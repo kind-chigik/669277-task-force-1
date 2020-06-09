@@ -39,7 +39,7 @@ class UsersQuery extends \yii\db\ActiveQuery
 
   public function withTasks()
     {
-        return $this->joinWith('tasks0');
+        return $this->joinWith('executorTasks');
     }
 
     public function withReviews()
