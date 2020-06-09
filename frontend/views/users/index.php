@@ -25,7 +25,7 @@ $this->title = 'Исполнители';
                 <div class="user__search-icon">
                     <a href="#"><img src="./img/<?= $executor->avatar_path ?? 'user-photo.png'; ?>" width="65" height="65"></a>
                     <span><?= Yii::$app->i18n->format('{t, plural, =0{# заданий} one{# задание} few{# задания} many{# заданий} other{# заданий}}', 
-                    ['t' => $executor->tasksCount], 'ru-RU'); ?></span>
+                    ['t' => $executor->executorTasksCount], 'ru-RU'); ?></span>
                     <span><?= Yii::$app->i18n->format('{n, plural, =0{# отзывов} one{# отзыв} few{# отзыва} many{# отзывов} other{# отзывов}}', 
                     ['n' => $executor->reviewsCount], 'ru-RU'); ?></span>
                 </div>
