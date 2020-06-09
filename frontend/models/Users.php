@@ -31,8 +31,8 @@ use Yii;
  * @property PhotosWork[] $photosWorks
  * @property Replies[] $replies
  * @property Reviews[] $reviews
- * @property Tasks[] $tasks
- * @property Tasks[] $tasks0
+ * @property Tasks[] $cusomerTasks
+ * @property Tasks[] $executorTasks
  * @property UserCategories[] $userCategories
  */
 class Users extends \yii\db\ActiveRecord
@@ -40,14 +40,14 @@ class Users extends \yii\db\ActiveRecord
     private $tasksCount;
     private $reviewsCount;
     
-    public function getTasksCount()
+    public function getExecutorTasksCount()
     {
         if ($this->isNewRecord) {
-            return null;
+            return 0;
         }
 
         if ($this->tasksCount === null) {
-            $this->tasksCount = $this->getTasks0()->count();
+            $this->tasksCount = $this->getExecutorTasks()->count();
         }
 
         return $this->tasksCount;
@@ -187,21 +187,21 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Tasks]].
+     * Gets query for [[CusomerTasks]].
      *
      * @return \yii\db\ActiveQuery|TasksQuery
      */
-    public function getTasks()
+    public function getCusomerTasks()
     {
         return $this->hasMany(Tasks::className(), ['creator_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Tasks0]].
+     * Gets query for [[ExecutorTasks]].
      *
      * @return \yii\db\ActiveQuery|TasksQuery
      */
-    public function getTasks0()
+    public function getExecutorTasks()
     {
         return $this->hasMany(Tasks::className(), ['executor_id' => 'id']);
     }
