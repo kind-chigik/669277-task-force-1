@@ -32,6 +32,7 @@ CREATE TABLE users (
   rank INT DEFAULT '0',
   address VARCHAR(128),
   city_id INT UNSIGNED NOT NULL,
+  role ENUM('customer', 'executor'),
   FOREIGN KEY (city_id) REFERENCES cities (id)
 );
 

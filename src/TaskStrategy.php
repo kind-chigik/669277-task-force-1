@@ -50,18 +50,35 @@ class TaskStrategy {
 
     }
 
+    /**
+     * Получает список всех возможных действий на сайте
+     * 
+     * @return array Массив с полными именами классов действий
+     */
     public function getActionList(): array
     {
         $actionList = self::ACTION;
         return $actionList;
     }
 
+    /**
+     * Получает список всех возможных статусов на сайте
+     * 
+     * @return array Массив со статусами
+     */
     public function getStatusList(): array
     {
         $statusList = self::STATUS;
         return $statusList;
     }
 
+    /**
+     * Определяет статус в зависимости от действия
+     * 
+     * @param string $action Действие
+     * 
+     * @return null|string Пустое значение или Статус
+     */
     public function getNextStatus(string $action) : ?string
     {
         if (!in_array($action, self::ACTION))
@@ -86,6 +103,14 @@ class TaskStrategy {
         }
         return null;
     }
+
+    /**
+     * Получает список доступных пользователю действий
+     * 
+     * @param int $idCurrentUser id текущего пользователя
+     * 
+     * @return array Массив с объектами действий
+     */
 
     public function getAvailableActions(int $idCurrentUser) : array
     {

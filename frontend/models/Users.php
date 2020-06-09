@@ -22,6 +22,7 @@ use Yii;
  * @property int|null $rank
  * @property string|null $address
  * @property int $city_id
+ * @property string|null $role
  *
  * @property Attachments[] $attachments
  * @property Categories[] $categories
@@ -30,12 +31,41 @@ use Yii;
  * @property PhotosWork[] $photosWorks
  * @property Replies[] $replies
  * @property Reviews[] $reviews
- * @property Tasks[] $tasks
- * @property Tasks[] $tasks0
+ * @property Tasks[] $cusomerTasks
+ * @property Tasks[] $executorTasks
  * @property UserCategories[] $userCategories
  */
 class Users extends \yii\db\ActiveRecord
 {
+    private $tasksCount;
+    private $reviewsCount;
+    
+    public function getExecutorTasksCount()
+    {
+        if ($this->isNewRecord) {
+            return 0;
+        }
+
+        if ($this->tasksCount === null) {
+            $this->tasksCount = $this->getExecutorTasks()->count();
+        }
+
+        return $this->tasksCount;
+    }
+
+    public function getReviewsCount() 
+    {
+        if($this->isNewRecord) {
+            return null;
+        }
+
+        if($this->reviewsCount === null) {
+            $this->reviewsCount = $this->getReviews()->count();
+        }
+
+        return $this->reviewsCount;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -52,7 +82,7 @@ class Users extends \yii\db\ActiveRecord
         return [
             [['name', 'password', 'email', 'city_id'], 'required'],
             [['birthday', 'registration_date', 'last_visit'], 'safe'],
-            [['about'], 'string'],
+            [['about', 'role'], 'string'],
             [['rank', 'city_id'], 'integer'],
             [['name', 'password', 'phone', 'email', 'skype', 'another_contact'], 'string', 'max' => 64],
             [['avatar_path', 'address'], 'string', 'max' => 128],
@@ -82,6 +112,7 @@ class Users extends \yii\db\ActiveRecord
             'rank' => 'Rank',
             'address' => 'Address',
             'city_id' => 'City ID',
+            'role' => 'Role',
         ];
     }
 
@@ -156,21 +187,21 @@ class Users extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Tasks]].
+     * Gets query for [[CusomerTasks]].
      *
      * @return \yii\db\ActiveQuery|TasksQuery
      */
-    public function getTasks()
+    public function getCusomerTasks()
     {
         return $this->hasMany(Tasks::className(), ['creator_id' => 'id']);
     }
 
     /**
-     * Gets query for [[Tasks0]].
+     * Gets query for [[ExecutorTasks]].
      *
      * @return \yii\db\ActiveQuery|TasksQuery
      */
-    public function getTasks0()
+    public function getExecutorTasks()
     {
         return $this->hasMany(Tasks::className(), ['executor_id' => 'id']);
     }

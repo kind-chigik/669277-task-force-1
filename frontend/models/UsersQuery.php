@@ -31,4 +31,29 @@ class UsersQuery extends \yii\db\ActiveQuery
     {
         return parent::one($db);
     }
+
+    public function isExecutor()
+    {
+        return $this->andWhere(['role' => 'executor']);
+    }
+
+  public function withTasks()
+    {
+        return $this->joinWith('executorTasks');
+    }
+
+    public function withReviews()
+    {
+        return $this->joinWith('reviews');
+    }
+
+    public function withCategories()
+    {
+        return $this->joinWith('categories');
+    }
+
+    public function sortByRegistrationDate($sort)
+    {
+        return $this->orderBy(['registration_date' => $sort]);
+    }
 }
